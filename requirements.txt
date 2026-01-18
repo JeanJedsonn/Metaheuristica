@@ -1,0 +1,2 @@
+# Archivo para listar las dependencias del proyecto
+# Para instalar: pip install -r requirements.txt
