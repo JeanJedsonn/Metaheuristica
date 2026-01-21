@@ -11,9 +11,9 @@ import chess
 board = chess.Board()
 
 # Configuraciones iniciales
-N = 8
-MAX_ITERACIONES = 10000   # Reinicios maximos
-TEMPERATURA_INICIAL = 100
+N = 8                         # Reinas
+MAX_ITERACIONES = 10000       # Busquedas maximas para la temperatura t
+TEMPERATURA_INICIAL = 100     # Temperatura inicial
 
 class Tablero:
     tablero: list[int]
@@ -80,32 +80,32 @@ def simulated_annealing():
     random:int          = 0                         # Numero aleatorio
     probabilidad:float  = 0                         # Probabilidad
     
-    # Bucle principal
+    # Bucle principal, control de temperatura
     while (temperatura > 1 and costo_actual > 0):
         iteraciones     = 0
-        # en este caso el bucle es redundante, las iteraciones las hace la temperatura inicial
+        # bucle interno, busqueda de vecinos
         while (iteraciones < MAX_ITERACIONES and costo_actual > 0):
             
-            costo_actual    = estado_actual.costo()             # Costo del tablero
-            vecino          = copy.copy(estado_actual.vecino_aleatorio())  # Vecino aleatorio
-            costo_vecino    = vecino.costo()                    # Costo del vecino
-            delta_costo     = costo_vecino - costo_actual       # Diferencia de costos
+            costo_actual    = estado_actual.costo()                            # Costo del tablero
+            vecino          = copy.copy(estado_actual.vecino_aleatorio())      # Vecino aleatorio
+            costo_vecino    = vecino.costo()                                   # Costo del vecino
+            delta_costo     = costo_vecino - costo_actual                      # Diferencia de costos
 
 
 
             # Si el vecino es mejor que la solucion actual
             if (delta_costo < 0):
-                estado_actual = copy.copy(vecino)                      # Actualizar la solucion actual
-                costo_actual = costo_vecino
+                estado_actual = copy.copy(vecino)                        # Actualizar la solucion actual
+                costo_actual = costo_vecino                              # Actualizar el costo actual
 
             else:
-                random = randint(0, 100)/100                # Numero aleatorio
-                probabilidad = math.exp(-delta_costo / temperatura)  # Probabilidad de aceptar el vecino
+                random = randint(0, 100)/100                             # Numero aleatorio
+                probabilidad = math.exp(-delta_costo / temperatura)      # Probabilidad de aceptar el vecino
 
                 # Si el numero aleatorio es menor que la probabilidad
                 if (random < probabilidad):                   
                     estado_actual = copy.copy(vecino)                    # Actualizar la solucion actual
-                    costo_actual = costo_vecino
+                    costo_actual = costo_vecino                          # Actualizar el costo actual
             
             iteraciones += 1
 
