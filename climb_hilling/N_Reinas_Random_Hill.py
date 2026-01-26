@@ -3,64 +3,21 @@
 # costo = numero de ataques entre reinas
 
 # Importar
+import sys
+import os
 from random import randint
 import copy
 
+# Add parent directory to path to allow importing from librerias
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+from librerias.tablero import Tablero
+
 # Configuraciones iniciales
-N = 4
+N = 8
 MAX_ITERACIONES = 100   # Reinicios maximos
 MAX_INTENTOS = 50     # Intentos maximos
 
-class Tablero:
-    tablero: list[int]
-    
-    def __init__(self, tablero_inicial=None):
-        if tablero_inicial is None:
-            self.tablero = self.generar_tablero_aleatorio()
-        else:
-            self.tablero = tablero_inicial
 
-    # Genera un tablero aleatorio
-    def generar_tablero_aleatorio(self):
-        tablero = []
-        for i in range(N):
-            tablero.append(randint(0, N-1))
-        return tablero
-
-    # retorna la cantidad de ataques entre reinas
-    def costo(self):
-        errores = 0
-
-        #Ataques en diagonales
-        for i in range(N):
-            # es un vector, se debe evaluar con respecto a los otros elementos
-            for j in range(N):
-                if i == j:
-                    continue
-                if abs(self.tablero[i] - self.tablero[j]) == abs(i - j):
-                    errores += 1
-
-        #Ataques en filas
-        # columna de 0 a N-1
-        for i in range(N):
-            # fila de i+1 a N-1
-            for j in range(i+1, N):
-                if self.tablero[i] == self.tablero[j]:
-                    errores += 1
-        return errores
-
-    # Mueve una reina aleatoria a una fila aleatoria
-    def mover_reina_aleatoria(self):
-        reina = randint(0, N-1)
-        fila = randint(0, N-1)
-        self.tablero[reina] = fila
-
-    # retorna un vecino aleatorio (OBJETO Tablero, no lista)
-    def vecino_aleatorio(self):
-        nuevo_tablero_lista = copy.copy(self.tablero)
-        vecino = Tablero(nuevo_tablero_lista)
-        vecino.mover_reina_aleatoria()
-        return vecino
 
 
 def tiempo_aleatorio():
@@ -68,7 +25,7 @@ def tiempo_aleatorio():
 
 def random_restart_hill_climbing():
     t:int  = 0                                      # Iteraciones de tiempo
-    solucion: Tablero = Tablero()                   # Solucion actual
+    solucion: Tablero = Tablero(n=N)                   # Solucion actual
     mejorSolucion: Tablero = copy.copy(solucion)    # Mejor solucion
 
     #do while, mientras no se cumplan las condiciones de parada
@@ -94,7 +51,7 @@ def random_restart_hill_climbing():
                 break
         
         t += 1
-        solucion = Tablero()
+        solucion = Tablero(n=N)
         #do
         if (mejorSolucion.costo() == 0 or t == MAX_ITERACIONES):
             break
